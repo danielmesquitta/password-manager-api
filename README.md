@@ -10,6 +10,10 @@
 - [Validator](https://github.com/go-playground/validator/)
 - [Godotenv](https://github.com/joho/godotenv/)
 
+## Live application (Deployed in AWS)
+
+- [Swagger Docs](https://passmanager-api.danielmesquitta.com/docs/index.html)
+
 ## Running locally
 
 ### Requirements
@@ -37,4 +41,27 @@ $ cp .env.example .env
 
 # Start
 $ make dev
+```
+
+## Running in production
+
+### Requirements
+
+- [git](https://git-scm.com/)
+- [Docker](https://docker.com/)
+
+### Start API
+
+```shell
+# Clone the project
+$ git clone https://github.com/danielmesquitta/password-manager-api
+
+# Access the folder
+cd password-manager-api
+
+# Create .env file
+$ cp .env.example .env
+
+# Build and run docker container
+$ docker compose up -d
 ```
