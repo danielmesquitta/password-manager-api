@@ -1,5 +1,7 @@
 # Password Manager (API)
 
+RestAPI built with Go and Fiber, following the MVC design pattern and some [Go standards](https://github.com/golang-standards/project-layout), such as using the cmd, internal and pkg directories.
+
 ## Technologies and Libraries
 
 - [Go](https://go.dev/)
