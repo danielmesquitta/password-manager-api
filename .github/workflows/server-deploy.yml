@@ -1,0 +1,31 @@
+name: Server Deploy
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    name: Executing remote ssh commands
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v3
+
+      - name: SSH to EC2 instance and execute commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          username: ${{ secrets.EC2_USER }}
+          script: |
+            cd /home/${{ secrets.EC2_USER }}
+            git clone https://github.com/danielmesquitta/password-manager-api
+            cd password-manager-api
+            echo '${{ secrets.ENV }}' > .env
+            docker stop $(docker ps -a -q) || true
+            sudo kill -9 $(sudo lsof -t -i:3000) || true
+            docker system prune -a -f || true
+            docker compose up -d
+            cd .. && rm -rf password-manager-api
