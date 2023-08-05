@@ -6,7 +6,6 @@
 - [Fiber](https://docs.gofiber.io/)
 - [Docker](https://docker.com/)
 - [Swagger](https://swagger.io/)
-- [Swagger](https://swagger.io/)
 - [Google UUID](https://github.com/google/uuid/)
 - [Validator](https://github.com/go-playground/validator/)
 - [Godotenv](https://github.com/joho/godotenv/)
