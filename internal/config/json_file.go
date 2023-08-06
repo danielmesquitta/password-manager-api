@@ -1,8 +1,3 @@
 package config
 
-var JsonFile = ""
-
-func setJsonFilePath() {
-	JsonFile = "data.json"
-
-}
+const JsonFile = "data.json"
