@@ -11,9 +11,9 @@ func Open(filePath string) (*os.File, error) {
 	return os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
 }
 
-func Decode(file *os.File, data any) error {
+func Decode[T any](file *os.File, dataPtr *T) error {
 	decoder := json.NewDecoder(file)
-	if err := decoder.Decode(&data); err != nil && err != io.EOF {
+	if err := decoder.Decode(&dataPtr); err != nil && err != io.EOF {
 		return err
 	}
 
