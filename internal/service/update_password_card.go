@@ -1,57 +1,51 @@
 package service
 
 import (
+	"errors"
 	"time"
 
-	"github.com/danielmesquitta/password-manager-api/internal/config"
+	"github.com/danielmesquitta/password-manager-api/internal/dto"
 	"github.com/danielmesquitta/password-manager-api/internal/model"
+	"github.com/danielmesquitta/password-manager-api/internal/repository"
 	"github.com/danielmesquitta/password-manager-api/pkg/crypt"
-	"github.com/danielmesquitta/password-manager-api/pkg/jsonmanager"
+	"github.com/danielmesquitta/password-manager-api/pkg/validator"
 )
 
-func UpdatePasswordCardService(id string, data model.PasswordCard) error {
-	file, err := jsonmanager.Open(config.JsonFile)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	passwordCards := []model.PasswordCard{}
-	if err := jsonmanager.Decode(file, &passwordCards); err != nil {
-		return err
+func UpdatePasswordCardService(r repository.PasswordCardRepository, c crypt.Crypter, id string, data dto.UpdatePasswordCardDTO) error {
+	validator := validator.NewValidator()
+	if errs := validator.Validate(data); errs != nil {
+		return errors.New(validator.FormatErrs(errs))
 	}
 
-	// Find the password card with the given id and update it
-	for i, passwordCard := range passwordCards {
-		if passwordCard.ID == id {
-			passwordCard.UpdatedAt = time.Now()
+	passwordCard := model.PasswordCard{}
+	if err := r.GetPasswordCard(id, &passwordCard); err != nil {
+		return err
+	}
 
-			if data.Name != "" {
-				passwordCard.Name = data.Name
-			}
+	passwordCard.UpdatedAt = time.Now()
 
-			if data.Url != "" {
-				passwordCard.Url = data.Url
-			}
+	if data.Name != "" {
+		passwordCard.Name = data.Name
+	}
 
-			if data.Username != "" {
-				passwordCard.Username = data.Username
-			}
+	if data.Url != "" {
+		passwordCard.Url = data.Url
+	}
 
-			if data.Password != "" {
-				encryptedPassword, err := crypt.Encrypt(data.Password)
-				if err != nil {
-					return err
-				}
+	if data.Username != "" {
+		passwordCard.Username = data.Username
+	}
 
-				passwordCard.Password = encryptedPassword
-			}
-
-			passwordCards[i] = passwordCard
+	if data.Password != "" {
+		encryptedPassword, err := c.Encrypt(data.Password)
+		if err != nil {
+			return err
 		}
+
+		passwordCard.Password = encryptedPassword
 	}
 
-	if err := jsonmanager.Encode(file, passwordCards); err != nil {
+	if err := r.UpdatePasswordCard(id, passwordCard); err != nil {
 		return err
 	}
 
