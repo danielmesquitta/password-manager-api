@@ -1,8 +1,6 @@
 package crypt
 
-import (
-	"os"
-)
+import "os"
 
 var secret = ""
 
@@ -19,4 +17,15 @@ func Init() {
 	default:
 		panic("SECRET must be at least 16 characters long")
 	}
+}
+
+type Crypter interface {
+	Encrypt(string) (string, error)
+	Decrypt(string) (string, error)
+}
+
+type Crypt struct{}
+
+func New() *Crypt {
+	return &Crypt{}
 }
