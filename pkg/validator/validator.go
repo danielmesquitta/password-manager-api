@@ -11,7 +11,10 @@ import (
 
 var validate *validator.Validate
 var trans ut.Translator
-var Validator *ValidatorType
+
+func NewValidator() *Validator {
+	return &Validator{}
+}
 
 func Init() {
 	validate = validator.New()
@@ -21,12 +24,12 @@ func Init() {
 	_ = enTranslations.RegisterDefaultTranslations(validate, trans)
 }
 
-type ValidatorType byte
+type Validator struct{}
 
-func (v *ValidatorType) Validate(s interface{}) []error {
+func (v *Validator) Validate(data any) []error {
 	var errs []error
 
-	err := validate.Struct(s)
+	err := validate.Struct(data)
 
 	if err == nil {
 		return nil
@@ -42,7 +45,7 @@ func (v *ValidatorType) Validate(s interface{}) []error {
 	return errs
 }
 
-func (v *ValidatorType) FormatErrs(errs []error) string {
+func (v *Validator) FormatErrs(errs []error) string {
 	var s string
 
 	for index, err := range errs {
