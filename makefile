@@ -3,7 +3,7 @@
 default: dev
 
 dev:
-	@air
+	@make build && air
 build:
 	@go build -o ./tmp/server ./cmd/server/main.go
 clean:
