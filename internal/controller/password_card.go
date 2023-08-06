@@ -17,7 +17,10 @@ type PasswordCardController struct {
 	Crypter                crypt.Crypter
 }
 
-func NewPasswordCardController(r repository.PasswordCardRepository, c crypt.Crypter) *PasswordCardController {
+func NewPasswordCardController(
+	r repository.PasswordCardRepository,
+	c crypt.Crypter,
+) *PasswordCardController {
 	return &PasswordCardController{
 		PasswordCardRepository: r,
 		Crypter:                c,
@@ -42,7 +45,11 @@ func (c *PasswordCardController) CreatePasswordCard(ctx *fiber.Ctx) error {
 		return fiber.NewError(http.StatusBadRequest, "failed to parse JSON")
 	}
 
-	if err := service.CreatePasswordCardService(c.PasswordCardRepository, c.Crypter, dto); err != nil {
+	if err := service.CreatePasswordCardService(
+		c.PasswordCardRepository,
+		c.Crypter,
+		dto,
+	); err != nil {
 		return fiber.NewError(http.StatusBadRequest, err.Error())
 	}
 
@@ -87,11 +94,17 @@ func (c PasswordCardController) ListPasswordCards(ctx *fiber.Ctx) error {
 	search := ctx.Query("search")
 
 	passwordCards := []model.PasswordCard{}
-	if err := service.ListPasswordCardsService(c.PasswordCardRepository, c.Crypter, search, &passwordCards); err != nil {
+	if err := service.ListPasswordCardsService(
+		c.PasswordCardRepository,
+		c.Crypter,
+		search,
+		&passwordCards,
+	); err != nil {
 		return fiber.NewError(http.StatusInternalServerError, err.Error())
 	}
 
-	return ctx.Status(http.StatusOK).JSON(response.ListResponse[model.PasswordCard]{Data: passwordCards})
+	return ctx.Status(http.StatusOK).
+		JSON(response.ListResponse[model.PasswordCard]{Data: passwordCards})
 }
 
 // @BasePath /api/v1
@@ -115,7 +128,10 @@ func (c PasswordCardController) UpdatePasswordCard(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 
 	if err := service.UpdatePasswordCardService(c.PasswordCardRepository, c.Crypter, id, dto); err != nil {
-		return fiber.NewError(http.StatusBadRequest, "failed to update password card")
+		return fiber.NewError(
+			http.StatusBadRequest,
+			"failed to update password card",
+		)
 	}
 
 	ctx.Status(http.StatusOK)

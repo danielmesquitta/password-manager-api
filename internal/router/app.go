@@ -28,6 +28,8 @@ func NewApp() *fiber.App {
 
 	app.Use(recover.New())
 
+	// app.Use(middleware.EnsureSessionMiddleware)
+
 	initializeRoutes(app)
 
 	return app

@@ -6,8 +6,15 @@ import (
 	"github.com/danielmesquitta/password-manager-api/pkg/crypt"
 )
 
-func ListPasswordCardsService(r repository.PasswordCardRepository, c crypt.Crypter, search string, pcsPtr *[]model.PasswordCard) error {
-	err := r.ListPasswordCards(search, pcsPtr)
+func ListPasswordCardsService(
+	r repository.PasswordCardRepository,
+	c crypt.Crypter,
+	search string,
+	pcsPtr *[]model.PasswordCard,
+) error {
+	err := r.ListPasswordCards(pcsPtr, repository.ListPasswordCardsFilters{
+		Search: search,
+	})
 
 	if err != nil {
 		return err

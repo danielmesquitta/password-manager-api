@@ -2,6 +2,10 @@ package repository
 
 import "github.com/danielmesquitta/password-manager-api/internal/model"
 
+type ListPasswordCardsFilters struct {
+	Search string
+}
+
 type PasswordCardRepository interface {
 	CreatePasswordCard(data model.PasswordCard) error
 
@@ -11,5 +15,8 @@ type PasswordCardRepository interface {
 
 	GetPasswordCard(id string, pcPtr *model.PasswordCard) error
 
-	ListPasswordCards(search string, pcsPtr *[]model.PasswordCard) error
+	ListPasswordCards(
+		pcsPtr *[]model.PasswordCard,
+		filters ListPasswordCardsFilters,
+	) error
 }

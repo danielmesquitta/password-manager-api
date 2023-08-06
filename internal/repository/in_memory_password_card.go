@@ -17,13 +17,18 @@ func NewInMemoryPasswordCardRepository() *InMemoryPasswordCardRepository {
 	}
 }
 
-func (r *InMemoryPasswordCardRepository) CreatePasswordCard(data model.PasswordCard) error {
+func (r *InMemoryPasswordCardRepository) CreatePasswordCard(
+	data model.PasswordCard,
+) error {
 	r.PasswordCards = append(r.PasswordCards, data)
 
 	return nil
 }
 
-func (r *InMemoryPasswordCardRepository) UpdatePasswordCard(id string, data model.PasswordCard) error {
+func (r *InMemoryPasswordCardRepository) UpdatePasswordCard(
+	id string,
+	data model.PasswordCard,
+) error {
 	index := -1
 	for i, passwordCard := range r.PasswordCards {
 		if passwordCard.ID == id {
@@ -53,12 +58,17 @@ func (r *InMemoryPasswordCardRepository) DeletePasswordCard(id string) error {
 		return errors.New("not found")
 	}
 
-	r.PasswordCards = append(r.PasswordCards[:index], r.PasswordCards[index+1:]...)
+	r.PasswordCards = append(
+		r.PasswordCards[:index],
+		r.PasswordCards[index+1:]...)
 
 	return nil
 }
 
-func (r *InMemoryPasswordCardRepository) GetPasswordCard(id string, pcPtr *model.PasswordCard) error {
+func (r *InMemoryPasswordCardRepository) GetPasswordCard(
+	id string,
+	pcPtr *model.PasswordCard,
+) error {
 	for _, passwordCard := range r.PasswordCards {
 		if passwordCard.ID == id {
 			*pcPtr = passwordCard
@@ -70,19 +80,22 @@ func (r *InMemoryPasswordCardRepository) GetPasswordCard(id string, pcPtr *model
 	return nil
 }
 
-func (r *InMemoryPasswordCardRepository) ListPasswordCards(search string, pcsPtr *[]model.PasswordCard) error {
-	if search == "" {
+func (r *InMemoryPasswordCardRepository) ListPasswordCards(
+	pcsPtr *[]model.PasswordCard,
+	f ListPasswordCardsFilters,
+) (err error) {
+	if f.Search == "" {
 		*pcsPtr = r.PasswordCards
 
 		return nil
 	}
 
-	searchRegex, err := regexp.Compile("(?i)" + search)
+	searchRegex, err := regexp.Compile("(?i)" + f.Search)
 	if err != nil {
 		return err
 	}
 
-	filteredPasswordCards := make([]model.PasswordCard, 0, len(r.PasswordCards))
+	filteredPasswordCards := []model.PasswordCard{}
 
 	for _, passwordCard := range r.PasswordCards {
 		if searchRegex.MatchString(passwordCard.Name) {

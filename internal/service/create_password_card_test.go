@@ -108,7 +108,11 @@ func TestCreatePasswordCardService(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := CreatePasswordCardService(inMemoryPasswordCardRepository, cryptMock, tt.args.data); (err != nil) != tt.wantErr {
-				t.Errorf("CreatePasswordCardService() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf(
+					"CreatePasswordCardService() error = %v, wantErr %v",
+					err,
+					tt.wantErr,
+				)
 			}
 		})
 	}

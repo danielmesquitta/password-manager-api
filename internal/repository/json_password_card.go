@@ -16,7 +16,9 @@ func NewJsonPasswordCardRepository() *JsonPasswordCardRepository {
 	return &JsonPasswordCardRepository{}
 }
 
-func (r JsonPasswordCardRepository) CreatePasswordCard(data model.PasswordCard) error {
+func (r JsonPasswordCardRepository) CreatePasswordCard(
+	data model.PasswordCard,
+) error {
 	file, err := jsonmanager.Open(config.JsonFile)
 	if err != nil {
 		return err
@@ -37,7 +39,10 @@ func (r JsonPasswordCardRepository) CreatePasswordCard(data model.PasswordCard) 
 	return nil
 }
 
-func (r JsonPasswordCardRepository) UpdatePasswordCard(id string, data model.PasswordCard) error {
+func (r JsonPasswordCardRepository) UpdatePasswordCard(
+	id string,
+	data model.PasswordCard,
+) error {
 	file, err := jsonmanager.Open(config.JsonFile)
 	if err != nil {
 		return err
@@ -114,7 +119,10 @@ func (r JsonPasswordCardRepository) DeletePasswordCard(id string) error {
 	return nil
 }
 
-func (r JsonPasswordCardRepository) GetPasswordCard(id string, p *model.PasswordCard) error {
+func (r JsonPasswordCardRepository) GetPasswordCard(
+	id string,
+	p *model.PasswordCard,
+) error {
 	file, err := jsonmanager.Open(config.JsonFile)
 	if err != nil {
 		return err
@@ -136,7 +144,10 @@ func (r JsonPasswordCardRepository) GetPasswordCard(id string, p *model.Password
 	return errors.New("not found")
 }
 
-func (r JsonPasswordCardRepository) ListPasswordCards(search string, pcsPtr *[]model.PasswordCard) error {
+func (r JsonPasswordCardRepository) ListPasswordCards(
+	pcsPtr *[]model.PasswordCard,
+	f ListPasswordCardsFilters,
+) error {
 	file, err := jsonmanager.Open(config.JsonFile)
 	if err != nil {
 		return err
@@ -147,16 +158,16 @@ func (r JsonPasswordCardRepository) ListPasswordCards(search string, pcsPtr *[]m
 		return err
 	}
 
-	if search != "" {
+	if f.Search == "" {
 		return nil
 	}
 
-	searchRegex, err := regexp.Compile("(?i)" + search)
+	searchRegex, err := regexp.Compile("(?i)" + f.Search)
 	if err != nil {
 		return err
 	}
 
-	filteredPasswordCards := make([]model.PasswordCard, 0, len(*pcsPtr))
+	filteredPasswordCards := []model.PasswordCard{}
 
 	for _, passwordCard := range *pcsPtr {
 		if searchRegex.MatchString(passwordCard.Name) {

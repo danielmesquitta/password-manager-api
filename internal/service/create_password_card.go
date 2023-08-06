@@ -12,7 +12,11 @@ import (
 	"github.com/google/uuid"
 )
 
-func CreatePasswordCardService(r repository.PasswordCardRepository, c crypt.Crypter, data dto.CreatePasswordCardDTO) error {
+func CreatePasswordCardService(
+	r repository.PasswordCardRepository,
+	c crypt.Crypter,
+	data dto.CreatePasswordCardDTO,
+) error {
 	validator := validator.NewValidator()
 	if errs := validator.Validate(data); errs != nil {
 		return errors.New(validator.FormatErrs(errs))
@@ -24,7 +28,7 @@ func CreatePasswordCardService(r repository.PasswordCardRepository, c crypt.Cryp
 	}
 
 	passwordCard := model.PasswordCard{
-		ID:        uuid.New().String(),
+		ID:        uuid.NewString(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		Name:      data.Name,

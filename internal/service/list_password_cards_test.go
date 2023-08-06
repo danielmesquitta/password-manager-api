@@ -88,11 +88,19 @@ func TestListPasswordCardsService(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := ListPasswordCardsService(tt.args.r, cryptMock, tt.args.search, tt.args.pcsPtr); (err != nil) != tt.wantErr {
-				t.Errorf("ListPasswordCardsService() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf(
+					"ListPasswordCardsService() error = %v, wantErr %v",
+					err,
+					tt.wantErr,
+				)
 			}
 
 			if length := len(*tt.args.pcsPtr); length != tt.wantLength {
-				t.Errorf("ListPasswordCardsService() length = %v, wantLength %v", length, tt.wantLength)
+				t.Errorf(
+					"ListPasswordCardsService() length = %v, wantLength %v",
+					length,
+					tt.wantLength,
+				)
 			}
 		})
 	}

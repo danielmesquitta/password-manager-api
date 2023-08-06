@@ -11,7 +11,12 @@ import (
 	"github.com/danielmesquitta/password-manager-api/pkg/validator"
 )
 
-func UpdatePasswordCardService(r repository.PasswordCardRepository, c crypt.Crypter, id string, data dto.UpdatePasswordCardDTO) error {
+func UpdatePasswordCardService(
+	r repository.PasswordCardRepository,
+	c crypt.Crypter,
+	id string,
+	data dto.UpdatePasswordCardDTO,
+) error {
 	validator := validator.NewValidator()
 	if errs := validator.Validate(data); errs != nil {
 		return errors.New(validator.FormatErrs(errs))
