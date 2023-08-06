@@ -3,7 +3,7 @@ package middleware
 import (
 	"errors"
 
-	"github.com/danielmesquitta/password-manager-api/internal/controller/response"
+	"github.com/danielmesquitta/password-manager-api/pkg/response"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 )

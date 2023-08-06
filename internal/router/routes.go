@@ -3,6 +3,8 @@ package router
 import (
 	"github.com/danielmesquitta/password-manager-api/internal/controller"
 	docs "github.com/danielmesquitta/password-manager-api/internal/docs"
+	"github.com/danielmesquitta/password-manager-api/internal/repository"
+	"github.com/danielmesquitta/password-manager-api/pkg/crypt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
 )
@@ -12,7 +14,10 @@ func initializeRoutes(app *fiber.App) {
 
 	docs.SwaggerInfo.BasePath = basePath
 
-	passwordCardController := controller.NewPasswordCardController()
+	jsonPasswordCardRepository := repository.NewJsonPasswordCardRepository()
+	crypt := crypt.New()
+
+	passwordCardController := controller.NewPasswordCardController(jsonPasswordCardRepository, crypt)
 
 	v1 := app.Group(basePath)
 	{

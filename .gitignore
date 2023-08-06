@@ -1,4 +1,6 @@
 .env
+.env.*
+!.env.example
 go.sum
 password-manager-api
 tmp/*

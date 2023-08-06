@@ -1,17 +1,24 @@
 package service
 
 import (
+	"errors"
 	"time"
 
-	"github.com/danielmesquitta/password-manager-api/internal/config"
+	"github.com/danielmesquitta/password-manager-api/internal/dto"
 	"github.com/danielmesquitta/password-manager-api/internal/model"
+	"github.com/danielmesquitta/password-manager-api/internal/repository"
 	"github.com/danielmesquitta/password-manager-api/pkg/crypt"
-	"github.com/danielmesquitta/password-manager-api/pkg/jsonmanager"
+	"github.com/danielmesquitta/password-manager-api/pkg/validator"
 	"github.com/google/uuid"
 )
 
-func CreatePasswordCardService(data model.PasswordCard) error {
-	encryptedPassword, err := crypt.Encrypt(data.Password)
+func CreatePasswordCardService(r repository.PasswordCardRepository, c crypt.Crypter, data dto.CreatePasswordCardDTO) error {
+	validator := validator.NewValidator()
+	if errs := validator.Validate(data); errs != nil {
+		return errors.New(validator.FormatErrs(errs))
+	}
+
+	encryptedPassword, err := c.Encrypt(data.Password)
 	if err != nil {
 		return err
 	}
@@ -26,20 +33,8 @@ func CreatePasswordCardService(data model.PasswordCard) error {
 		Password:  encryptedPassword,
 	}
 
-	file, err := jsonmanager.Open(config.JsonFile)
+	err = r.CreatePasswordCard(passwordCard)
 	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	passwordCards := []model.PasswordCard{}
-	if err := jsonmanager.Decode(file, &passwordCards); err != nil {
-		return err
-	}
-
-	passwordCards = append(passwordCards, passwordCard)
-
-	if err := jsonmanager.Encode(file, passwordCards); err != nil {
 		return err
 	}
 
