@@ -3,16 +3,16 @@ package service
 import (
 	"testing"
 
+	"github.com/danielmesquitta/password-manager-api/internal/config"
 	"github.com/danielmesquitta/password-manager-api/internal/dto"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/crypt"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/validator"
 	"github.com/danielmesquitta/password-manager-api/internal/repository"
-	"github.com/danielmesquitta/password-manager-api/pkg/crypt"
-	"github.com/danielmesquitta/password-manager-api/pkg/validator"
 )
 
 func TestCreatePasswordCardService(t *testing.T) {
-	validator.Init()
-
-	cryptMock := crypt.NewMock()
+	val := validator.New()
+	cryptMock := crypt.NewMock(&config.EnvVars{})
 	inMemoryPasswordCardRepository := repository.NewInMemoryPasswordCardRepository()
 
 	type args struct {
@@ -107,7 +107,7 @@ func TestCreatePasswordCardService(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := CreatePasswordCardService(inMemoryPasswordCardRepository, cryptMock, tt.args.data); (err != nil) != tt.wantErr {
+			if err := CreatePasswordCardService(inMemoryPasswordCardRepository, cryptMock, val, tt.args.data); (err != nil) != tt.wantErr {
 				t.Errorf(
 					"CreatePasswordCardService() error = %v, wantErr %v",
 					err,

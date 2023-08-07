@@ -1,6 +1,6 @@
 # Password Manager (API)
 
-RestAPI built with Go and Fiber, following the MVC design pattern, dependency injection, repository pattern and some [Go standards](https://github.com/golang-standards/project-layout), such as using the cmd, internal and pkg directories.
+RestAPI built with Go and Fiber, with dependency injection using Uber Fx package, repository pattern, constructors and some [Go standards](https://github.com/golang-standards/project-layout), such as using the cmd, internal and pkg directories.
 
 ## Technologies and Libraries
 
@@ -8,6 +8,7 @@ RestAPI built with Go and Fiber, following the MVC design pattern, dependency in
 - [Fiber](https://docs.gofiber.io/)
 - [Docker](https://docker.com/)
 - [Swagger](https://swagger.io/)
+- [Uber Fx](https://github.com/uber-go/fx/)
 - [Google UUID](https://github.com/google/uuid/)
 - [Validator](https://github.com/go-playground/validator/)
 - [Godotenv](https://github.com/joho/godotenv/)

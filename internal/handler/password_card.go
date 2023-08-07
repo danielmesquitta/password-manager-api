@@ -1,29 +1,33 @@
-package controller
+package handler
 
 import (
 	"net/http"
 
 	"github.com/danielmesquitta/password-manager-api/internal/dto"
 	"github.com/danielmesquitta/password-manager-api/internal/model"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/crypt"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/response"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/validator"
 	"github.com/danielmesquitta/password-manager-api/internal/repository"
 	"github.com/danielmesquitta/password-manager-api/internal/service"
-	"github.com/danielmesquitta/password-manager-api/pkg/crypt"
-	"github.com/danielmesquitta/password-manager-api/pkg/response"
 	"github.com/gofiber/fiber/v2"
 )
 
-type PasswordCardController struct {
+type PasswordCardHandler struct {
 	PasswordCardRepository repository.PasswordCardRepository
 	Crypter                crypt.Crypter
+	Validator              *validator.Validator
 }
 
-func NewPasswordCardController(
+func NewPasswordCardHandler(
 	r repository.PasswordCardRepository,
 	c crypt.Crypter,
-) *PasswordCardController {
-	return &PasswordCardController{
+	v *validator.Validator,
+) *PasswordCardHandler {
+	return &PasswordCardHandler{
 		PasswordCardRepository: r,
 		Crypter:                c,
+		Validator:              v,
 	}
 }
 
@@ -38,7 +42,7 @@ func NewPasswordCardController(
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
 // @Router /password-cards [post]
-func (c *PasswordCardController) CreatePasswordCard(ctx *fiber.Ctx) error {
+func (c *PasswordCardHandler) CreatePasswordCard(ctx *fiber.Ctx) error {
 	dto := dto.CreatePasswordCardDTO{}
 
 	if err := ctx.BodyParser(&dto); err != nil {
@@ -48,6 +52,7 @@ func (c *PasswordCardController) CreatePasswordCard(ctx *fiber.Ctx) error {
 	if err := service.CreatePasswordCardService(
 		c.PasswordCardRepository,
 		c.Crypter,
+		c.Validator,
 		dto,
 	); err != nil {
 		return fiber.NewError(http.StatusBadRequest, err.Error())
@@ -68,7 +73,7 @@ func (c *PasswordCardController) CreatePasswordCard(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 404 {object} response.ErrorResponse
 // @Router /password-cards/{id} [delete]
-func (c PasswordCardController) DeletePasswordCard(ctx *fiber.Ctx) error {
+func (c PasswordCardHandler) DeletePasswordCard(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 
 	if err := service.DeletePasswordCardService(c.PasswordCardRepository, id); err != nil {
@@ -90,7 +95,7 @@ func (c PasswordCardController) DeletePasswordCard(ctx *fiber.Ctx) error {
 // @Success 200 {object} response.ListPasswordCardsResponse
 // @Failure 500 {object} response.ErrorResponse
 // @Router /password-cards [get]
-func (c PasswordCardController) ListPasswordCards(ctx *fiber.Ctx) error {
+func (c PasswordCardHandler) ListPasswordCards(ctx *fiber.Ctx) error {
 	search := ctx.Query("search")
 
 	passwordCards := []model.PasswordCard{}
@@ -118,7 +123,7 @@ func (c PasswordCardController) ListPasswordCards(ctx *fiber.Ctx) error {
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
 // @Router /password-cards/{id} [put]
-func (c PasswordCardController) UpdatePasswordCard(ctx *fiber.Ctx) error {
+func (c PasswordCardHandler) UpdatePasswordCard(ctx *fiber.Ctx) error {
 	dto := dto.UpdatePasswordCardDTO{}
 
 	if err := ctx.BodyParser(&dto); err != nil {
@@ -127,7 +132,7 @@ func (c PasswordCardController) UpdatePasswordCard(ctx *fiber.Ctx) error {
 
 	id := ctx.Params("id")
 
-	if err := service.UpdatePasswordCardService(c.PasswordCardRepository, c.Crypter, id, dto); err != nil {
+	if err := service.UpdatePasswordCardService(c.PasswordCardRepository, c.Crypter, c.Validator, id, dto); err != nil {
 		return fiber.NewError(
 			http.StatusBadRequest,
 			"failed to update password card",

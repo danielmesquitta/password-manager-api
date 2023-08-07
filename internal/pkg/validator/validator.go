@@ -9,27 +9,28 @@ import (
 	enTranslations "github.com/go-playground/validator/v10/translations/en"
 )
 
-var validate *validator.Validate
-var trans ut.Translator
-
-func NewValidator() *Validator {
-	return &Validator{}
-}
-
-func Init() {
-	validate = validator.New()
+func New() *Validator {
+	validate := validator.New()
 	english := en.New()
 	uni := ut.New(english, english)
-	trans, _ = uni.GetTranslator("en")
+	trans, _ := uni.GetTranslator("en")
 	_ = enTranslations.RegisterDefaultTranslations(validate, trans)
+
+	return &Validator{
+		validate,
+		trans,
+	}
 }
 
-type Validator struct{}
+type Validator struct {
+	validate *validator.Validate
+	trans    ut.Translator
+}
 
 func (v *Validator) Validate(data any) []error {
 	var errs []error
 
-	err := validate.Struct(data)
+	err := v.validate.Struct(data)
 
 	if err == nil {
 		return nil
@@ -38,7 +39,7 @@ func (v *Validator) Validate(data any) []error {
 	validatorErrs := err.(validator.ValidationErrors)
 
 	for _, e := range validatorErrs {
-		translatedErr := fmt.Errorf(e.Translate(trans))
+		translatedErr := fmt.Errorf(e.Translate(v.trans))
 		errs = append(errs, translatedErr)
 	}
 

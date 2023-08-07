@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/danielmesquitta/password-manager-api/internal/model"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/crypt"
 	"github.com/danielmesquitta/password-manager-api/internal/repository"
-	"github.com/danielmesquitta/password-manager-api/pkg/crypt"
 )
 
 func ListPasswordCardsService(

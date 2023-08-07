@@ -4,13 +4,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/danielmesquitta/password-manager-api/internal/config"
 	"github.com/danielmesquitta/password-manager-api/internal/model"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/crypt"
 	"github.com/danielmesquitta/password-manager-api/internal/repository"
-	"github.com/danielmesquitta/password-manager-api/pkg/crypt"
 )
 
 func TestListPasswordCardsService(t *testing.T) {
-	cryptMock := crypt.NewMock()
+	cryptMock := crypt.NewMock(&config.EnvVars{})
 
 	type args struct {
 		r      repository.PasswordCardRepository

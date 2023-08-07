@@ -7,7 +7,7 @@ import (
 
 	"github.com/danielmesquitta/password-manager-api/internal/config"
 	"github.com/danielmesquitta/password-manager-api/internal/model"
-	"github.com/danielmesquitta/password-manager-api/pkg/jsonmanager"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/jsonmanager"
 )
 
 type JsonPasswordCardRepository struct{}

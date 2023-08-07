@@ -6,20 +6,20 @@ import (
 
 	"github.com/danielmesquitta/password-manager-api/internal/dto"
 	"github.com/danielmesquitta/password-manager-api/internal/model"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/crypt"
+	"github.com/danielmesquitta/password-manager-api/internal/pkg/validator"
 	"github.com/danielmesquitta/password-manager-api/internal/repository"
-	"github.com/danielmesquitta/password-manager-api/pkg/crypt"
-	"github.com/danielmesquitta/password-manager-api/pkg/validator"
 	"github.com/google/uuid"
 )
 
 func CreatePasswordCardService(
 	r repository.PasswordCardRepository,
 	c crypt.Crypter,
+	v *validator.Validator,
 	data dto.CreatePasswordCardDTO,
 ) error {
-	validator := validator.NewValidator()
-	if errs := validator.Validate(data); errs != nil {
-		return errors.New(validator.FormatErrs(errs))
+	if errs := v.Validate(data); errs != nil {
+		return errors.New(v.FormatErrs(errs))
 	}
 
 	encryptedPassword, err := c.Encrypt(data.Password)

@@ -1,8 +1,10 @@
 package crypt
 
+import "github.com/danielmesquitta/password-manager-api/internal/config"
+
 type MockCrypt struct{}
 
-func NewMock() *MockCrypt {
+func NewMock(_ *config.EnvVars) *MockCrypt {
 	return &MockCrypt{}
 }
 
