@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/danielmesquitta/password-manager-api/internal/dto"
+	"github.com/danielmesquitta/password-manager-api/internal/http/dto"
 	"github.com/danielmesquitta/password-manager-api/internal/model"
 	"github.com/danielmesquitta/password-manager-api/internal/pkg/crypt"
 	"github.com/danielmesquitta/password-manager-api/internal/pkg/response"
@@ -37,7 +37,7 @@ func NewPasswordCardHandler(
 // @Tags PasswordCards
 // @Accept json
 // @Produce json
-// @Param request body request.CreatePasswordCardRequest true "Request body"
+// @Param request body dto.CreatePasswordCardDTO true "Request body"
 // @Success 201
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse
@@ -92,7 +92,7 @@ func (c PasswordCardHandler) DeletePasswordCard(ctx *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param search query string false "Search by name"
-// @Success 200 {object} response.ListPasswordCardsResponse
+// @Success 200 {object} response.ListResponseWithoutGenerics
 // @Failure 500 {object} response.ErrorResponse
 // @Router /password-cards [get]
 func (c PasswordCardHandler) ListPasswordCards(ctx *fiber.Ctx) error {
@@ -118,7 +118,7 @@ func (c PasswordCardHandler) ListPasswordCards(ctx *fiber.Ctx) error {
 // @Tags PasswordCards
 // @Accept json
 // @Produce json
-// @Param request body request.UpdatePasswordCardRequest true "Request body"
+// @Param request body dto.UpdatePasswordCardDTO true "Request body"
 // @Success 201
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 500 {object} response.ErrorResponse

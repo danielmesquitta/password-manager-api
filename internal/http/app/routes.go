@@ -1,8 +1,8 @@
 package app
 
 import (
-	docs "github.com/danielmesquitta/password-manager-api/internal/docs"
-	"github.com/danielmesquitta/password-manager-api/internal/handler"
+	docs "github.com/danielmesquitta/password-manager-api/internal/http/docs"
+	"github.com/danielmesquitta/password-manager-api/internal/http/handler"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
 )

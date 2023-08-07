@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/danielmesquitta/password-manager-api/internal/dto"
+	"github.com/danielmesquitta/password-manager-api/internal/http/dto"
 	"github.com/danielmesquitta/password-manager-api/internal/model"
 	"github.com/danielmesquitta/password-manager-api/internal/pkg/crypt"
 	"github.com/danielmesquitta/password-manager-api/internal/pkg/validator"

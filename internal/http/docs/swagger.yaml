@@ -1,22 +1,5 @@
 definitions:
-  model.PasswordCard:
-    properties:
-      createdAt:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      password:
-        type: string
-      updatedAt:
-        type: string
-      url:
-        type: string
-      username:
-        type: string
-    type: object
-  request.CreatePasswordCardRequest:
+  dto.CreatePasswordCardDTO:
     properties:
       name:
         type: string
@@ -33,7 +16,7 @@ definitions:
     - url
     - username
     type: object
-  request.UpdatePasswordCardRequest:
+  dto.UpdatePasswordCardDTO:
     properties:
       name:
         type: string
@@ -52,11 +35,10 @@ definitions:
       statusCode:
         type: integer
     type: object
-  response.ListPasswordCardsResponse:
+  response.ListResponseWithoutGenerics:
     properties:
       data:
-        items:
-          $ref: '#/definitions/model.PasswordCard'
+        items: {}
         type: array
     type: object
 info:
@@ -78,7 +60,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.ListPasswordCardsResponse'
+            $ref: '#/definitions/response.ListResponseWithoutGenerics'
         "500":
           description: Internal Server Error
           schema:
@@ -96,7 +78,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/request.CreatePasswordCardRequest'
+          $ref: '#/definitions/dto.CreatePasswordCardDTO'
       produces:
       - application/json
       responses:
@@ -150,7 +132,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/request.UpdatePasswordCardRequest'
+          $ref: '#/definitions/dto.UpdatePasswordCardDTO'
       produces:
       - application/json
       responses:

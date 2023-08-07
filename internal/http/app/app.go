@@ -3,15 +3,15 @@ package app
 import (
 	"context"
 
-	"github.com/danielmesquitta/password-manager-api/internal/config"
-	"github.com/danielmesquitta/password-manager-api/internal/handler"
-	"github.com/danielmesquitta/password-manager-api/internal/middleware"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"go.uber.org/fx"
+
+	"github.com/danielmesquitta/password-manager-api/internal/config"
+	"github.com/danielmesquitta/password-manager-api/internal/http/handler"
+	"github.com/danielmesquitta/password-manager-api/internal/http/middleware"
 )
 
 func New(
@@ -35,12 +35,18 @@ func New(
 
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
-			go log.Fatal(app.Listen("0.0.0.0:" + env.Port))
+			go func() {
+				err := app.Listen("0.0.0.0:" + env.Port)
+
+				if err != nil {
+					panic(err)
+				}
+			}()
 
 			return nil
 		},
 
-		OnStop: func(ctx context.Context) error {
+		OnStop: func(context.Context) error {
 			return app.Shutdown()
 		},
 	})

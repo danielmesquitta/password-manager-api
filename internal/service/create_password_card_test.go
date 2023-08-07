@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/danielmesquitta/password-manager-api/internal/config"
-	"github.com/danielmesquitta/password-manager-api/internal/dto"
+	"github.com/danielmesquitta/password-manager-api/internal/http/dto"
 	"github.com/danielmesquitta/password-manager-api/internal/pkg/crypt"
 	"github.com/danielmesquitta/password-manager-api/internal/pkg/validator"
 	"github.com/danielmesquitta/password-manager-api/internal/repository"
